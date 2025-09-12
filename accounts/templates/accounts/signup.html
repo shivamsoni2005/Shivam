@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>College Event Management Sign Up</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('https://thumbs.dreamstime.com/b/event-party-people-blurred-background-70274351.jpg') no-repeat center center/cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      position: relative;
+    }
+
+    /* dark overlay on background */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background:(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+    }
+
+    .container {
+      position: relative;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      padding: 40px 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+      width: 380px;
+      text-align: center;
+      color: #fff;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-size: 28px;
+      letter-spacing: 1px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.85);
+      color: #333;
+      transition: 0.3s;
+    }
+
+    input:focus, select:focus {
+      background: #fff;
+      box-shadow: 0 0 8px rgba(0, 123, 255, 0.6);
+    }
+
+    button[type="submit"] {
+      background: linear-gradient(135deg, #28a745, #20c997);
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+      transition: transform 0.2s, background 0.3s;
+    }
+
+    button[type="submit"]:hover {
+      background: linear-gradient(135deg, #218838, #17a589);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+    }
+
+    p {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #ddd;
+    }
+
+    a {
+      color: #00d4ff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Sign Up</h2>
+    <form id="signupForm" method="post">
+      <input type="text" id="new-username" name="username" placeholder="Username" required>
+      <input type="email" id="new-email" name="email" placeholder="Email" required>
+      <input type="password" id="new-password" name="password" placeholder="Password" required>
+      
+      <select id="role" name="role" required>
+        <option value="user">Student</option>
+        <option value="admin">Admin</option>
+      </select>
+      
+      <button type="submit">Sign Up</button>
+    </form>
+    <p>Already have an account? <a href="/accounts/login">Log In</a></p>
+  </div>
+
+  <script>
+    const roleSelect = document.getElementById('role');
+
+    document.getElementById("signupForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      let data = {
+        username: document.getElementById("new-username").value,
+        email: document.getElementById("new-email").value,
+        password: document.getElementById("new-password").value,
+      };
+
+      try {
+        let url = roleSelect.value === "admin" 
+                  ? "/accounts/register_admin/" 
+                  : "/accounts/register_student/";
+
+        let response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data),
+        });
+
+        let result = await response.json();
+        if (result.status) {
+          alert("✅ " + result.message);
+          window.location.href = "/accounts/login";
+        } else {
+          alert("❌ " + result.error);
+        }
+      } catch (err) {
+        alert("⚠ Something went wrong: " + err);
+      }
+    });
+  </script>
+</body>
+</html>

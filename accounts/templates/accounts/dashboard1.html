@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background: url('https://static.vecteezy.com/system/resources/thumbnails/011/845/815/small/elegant-golden-scene-diagonal-glowing-with-lighting-effect-sparkle-on-black-background-vector.jpg') no-repeat center center/cover;
+      background-repeat:repeat  ; 
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Dark overlay */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: (0, 0, 0, 0.55);
+      backdrop-filter: blur(5px);
+      z-index: 0;
+    }
+
+    header {
+      position: relative;
+      background: rgba(0, 123, 255, 0.75);
+      backdrop-filter: blur(8px);
+      color: white;
+      padding: 18px 30px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      z-index: 1;
+    }
+
+    .container {
+      position: relative;
+      display: flex;
+      flex: 1;
+      z-index: 1;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 240px;
+      background: rgba(52, 58, 64, 0.6);
+      backdrop-filter: blur(12px);
+      padding: 25px 20px;
+      border-right: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .sidebar h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: #fff;
+      text-align: center;
+    }
+
+    .sidebar a {
+      display: block;
+      color: #ddd;
+      padding: 12px;
+      text-decoration: none;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .sidebar a:hover {
+      background: rgba(0, 123, 255, 0.6);
+      transform: translateX(5px);
+    }
+
+    /* Main content */
+    .main {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      max-width: 700px;
+      margin: auto;
+      color: #fff;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #00d4ff;
+      font-size: 24px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    input, select {
+      padding: 12px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: none;
+      font-size: 15px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.85);
+      color: #333;
+      transition: 0.3s;
+    }
+
+    input:focus, select:focus {
+      background: #fff;
+      box-shadow: 0 0 8px rgba(0, 123, 255, 0.7);
+    }
+
+    button {
+      background: linear-gradient(135deg, #28a745, #20c997);
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #218838, #17a589);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+    }
+
+    /* Event list */
+    .event-list {
+      margin-top: 30px;
+    }
+
+    .event-card {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(8px);
+      padding: 18px;
+      border-left: 5px solid #00d4ff;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      transition: transform 0.2s, box-shadow 0.3s;
+    }
+
+    .event-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    }
+
+    .event-card h3 {
+      margin: 0 0 8px;
+      color: #00d4ff;
+    }
+
+    .event-card p {
+      margin: 4px 0;
+      color: #eee;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  College Event Management - Dashboard
+</header>
+
+<div class="container">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>Menu</h2>
+    <a href="#">Create Event</a>
+    <a href="#">Manage Events</a>
+    <a href="#">Participants</a>
+    <a href="#">Logout</a>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="card">
+      <h2>Create Event</h2>
+      <form id="eventForm" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create Event</button>
+      </form>
+    </div>
+
+    <div class="event-list" id="eventList">
+      <h2>Upcoming Events</h2>
+      {% for event in events %}
+        <div class="event-card">
+          <h3>{{ event.name }}</h3>
+          <p><strong>Date:</strong> {{ event.date }}</p>
+          <p><strong>Participants:</strong> {{ event.participants_allowed }}</p>
+          <p><strong>Venue:</strong> {{ event.venue }}</p>
+        </div>
+      {% empty %}
+        <p>No events created yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+  // Simple client-side demo event list
+  const eventForm = document.getElementById('eventForm');
+  const eventList = document.getElementById('eventList');
+
+  if (eventForm) {
+    eventForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('eventName')?.value || "Sample Event";
+      const date = document.getElementById('eventDate')?.value || "2025-09-12";
+      const participants = document.getElementById('participants')?.value || "100";
+      const venue = document.getElementById('venue')?.value || "Main Hall";
+
+      const card = document.createElement('div');
+      card.classList.add('event-card');
+      card.innerHTML = `
+        <h3>${name}</h3>
+        <p><strong>Date:</strong> ${date}</p>
+        <p><strong>Participants:</strong> ${participants}</p>
+        <p><strong>Venue:</strong> ${venue}</p>
+      `;
+
+      eventList.appendChild(card);
+      eventForm.reset();
+    });
+  }
+</script>
+
+</body>
+</html>
