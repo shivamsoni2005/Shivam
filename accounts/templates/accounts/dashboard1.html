@@ -9,7 +9,7 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       background: url('https://static.vecteezy.com/system/resources/thumbnails/011/845/815/small/elegant-golden-scene-diagonal-glowing-with-lighting-effect-sparkle-on-black-background-vector.jpg') no-repeat center center/cover;
-      background-repeat:repeat  ; 
+      background-repeat: repeat;
       color: #fff;
       height: 100vh;
       display: flex;
@@ -17,7 +17,6 @@
       position: relative;
     }
 
-    /* Dark overlay */
     body::before {
       content: "";
       position: absolute;
@@ -47,7 +46,6 @@
       z-index: 1;
     }
 
-    /* Sidebar */
     .sidebar {
       width: 240px;
       background: rgba(52, 58, 64, 0.6);
@@ -78,7 +76,6 @@
       transform: translateX(5px);
     }
 
-    /* Main content */
     .main {
       flex: 1;
       padding: 30px;
@@ -153,7 +150,6 @@
       box-shadow: 0 6px 14px rgba(0,0,0,0.2);
     }
 
-    /* Event list */
     .event-list {
       margin-top: 30px;
     }
@@ -191,7 +187,6 @@
 </header>
 
 <div class="container">
-  <!-- Sidebar -->
   <div class="sidebar">
     <h2>Menu</h2>
     <a href="#">Create Event</a>
@@ -200,7 +195,6 @@
     <a href="#">Logout</a>
   </div>
 
-  <!-- Main -->
   <div class="main">
     <div class="card">
       <h2>Create Event</h2>
@@ -226,35 +220,6 @@
     </div>
   </div>
 </div>
-
-<script>
-  // Simple client-side demo event list
-  const eventForm = document.getElementById('eventForm');
-  const eventList = document.getElementById('eventList');
-
-  if (eventForm) {
-    eventForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const name = document.getElementById('eventName')?.value || "Sample Event";
-      const date = document.getElementById('eventDate')?.value || "2025-09-12";
-      const participants = document.getElementById('participants')?.value || "100";
-      const venue = document.getElementById('venue')?.value || "Main Hall";
-
-      const card = document.createElement('div');
-      card.classList.add('event-card');
-      card.innerHTML = `
-        <h3>${name}</h3>
-        <p><strong>Date:</strong> ${date}</p>
-        <p><strong>Participants:</strong> ${participants}</p>
-        <p><strong>Venue:</strong> ${venue}</p>
-      `;
-
-      eventList.appendChild(card);
-      eventForm.reset();
-    });
-  }
-</script>
 
 </body>
 </html>
